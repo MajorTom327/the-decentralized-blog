@@ -1,0 +1,40 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "forge: test",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/blog"
+      },
+      "command": "forge",
+      "args": [
+        "test",
+        "--watch",
+        "-vvv"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "label": "Update abi",
+      "type": "shell",
+      "options": {
+        "cwd": "${workspaceFolder}/"
+      },
+      "command": "cp",
+      "args": [
+        "blog/out/**/Blog.json",
+        "dapp/src/contracts/abi/"
+      ],
+      "problemMatcher": []
+    },
+    {
+      "type": "npm",
+      "script": "dev",
+      "path": "dapp",
+      "problemMatcher": [],
+      "label": "npm: dev - dapp",
+      "detail": "vite"
+    }
+  ]
+}

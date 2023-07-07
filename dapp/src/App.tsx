@@ -1,9 +1,17 @@
 import { useState } from "react";
 import { Layout } from "./components/Layout";
 import Card from "./components/Card/Card";
+import { useHelia } from "./hooks/useHelia";
 
 function App() {
   const [count, setCount] = useState(0);
+
+  const { error, starting } = useHelia();
+
+  console.log({
+    error,
+    starting,
+  });
 
   return (
     <>
