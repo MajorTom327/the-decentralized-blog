@@ -1,24 +1,31 @@
-import React from "react";
+import React, { useContext } from "react";
 import Card from "../Card";
 import useBlog from "../../hooks/useBlog";
 import { Post } from "../../contracts/Blog";
 import classNames from "classnames";
 import { DateTime } from "luxon";
+import { ArticleContext } from "../../contexts/ArticleProvider";
+import { isNotNil } from "ramda";
 
 type MenuItemProps = {
   children: React.ReactNode;
   disabled?: boolean;
-  timestamp?: number;
+  post?: Post;
 };
 
-const MenuItem: React.FC<MenuItemProps> = ({
-  children,
-  timestamp,
-  disabled,
-}) => {
+const MenuItem: React.FC<MenuItemProps> = ({ children, disabled, post }) => {
+  const articleCtx = useContext(ArticleContext);
   return (
     <li>
       <button
+        onClick={() => {
+          if (!disabled && isNotNil(post)) {
+            articleCtx.setSelectedArticle({
+              ...post,
+              ipfsUrl: "QmWvLWsr7eotz26hNfG2hgiFPNs2bxMZQjek7kw65cLpqR",
+            });
+          }
+        }}
         className={classNames("w-full p-2 transition rounded group", {
           "hover:bg-primary hover:text-primary-content cursor-pointer text-left hover:cursor-pointer":
             !disabled,
@@ -26,9 +33,9 @@ const MenuItem: React.FC<MenuItemProps> = ({
         })}
       >
         {children}
-        {timestamp && (
+        {post?.timestamp && (
           <span className="float-right text-neutral/50 group-hover:text-primary-content/75">
-            {DateTime.fromSeconds(timestamp).toLocaleString(
+            {DateTime.fromSeconds(post.timestamp).toLocaleString(
               DateTime.DATE_SHORT
             )}
           </span>
@@ -63,7 +70,7 @@ export const Side: React.FC = () => {
             />
             <ul>
               {cleanArticles.map((article: Post) => (
-                <MenuItem key={article.ipfsUrl} timestamp={article.timestamp}>
+                <MenuItem key={article.ipfsUrl} post={article}>
                   {article.title}
                 </MenuItem>
               ))}
