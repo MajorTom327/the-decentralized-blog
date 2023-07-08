@@ -25,6 +25,13 @@ export const ArticleContent: React.FC = () => {
           className="prose"
           children={prop<string>("content", ctx)}
         />
+
+        <div className="flex flex-col items-center justify-center mt-4 border-t pt-2 text-neutral/80">
+          <div>Retrieve the article on IPFS:</div>
+          <div className="font-semibold">
+            ipfs://{ctx.selectedArticle?.ipfsUrl}
+          </div>
+        </div>
       </Card>
     </>
   );
