@@ -6,6 +6,7 @@ import classNames from "classnames";
 import { DateTime } from "luxon";
 import { ArticleContext } from "../../contexts/ArticleProvider";
 import { isNotNil } from "ramda";
+import Donate from "./Donate";
 
 type MenuItemProps = {
   children: React.ReactNode;
@@ -22,7 +23,8 @@ const MenuItem: React.FC<MenuItemProps> = ({ children, disabled, post }) => {
           if (!disabled && isNotNil(post)) {
             articleCtx.setSelectedArticle({
               ...post,
-              ipfsUrl: "QmWvLWsr7eotz26hNfG2hgiFPNs2bxMZQjek7kw65cLpqR",
+              // ipfsUrl: "QmWvLWsr7eotz26hNfG2hgiFPNs2bxMZQjek7kw65cLpqR",
+              ipfsUrl: "QmQgs1NfzBim1VGskhLKeRJG2Kjj1BR7yF6LhRhAbVbfpr",
             });
           }
         }}
@@ -55,7 +57,9 @@ export const Side: React.FC = () => {
 
   return (
     <>
-      <aside className="w-full">
+      <aside className="w-full flex flex-col gap-2">
+        <Donate />
+
         <Card>
           <h1 className="text-blue-500 text-2xl text-center mb-2">
             Articles ({count}):

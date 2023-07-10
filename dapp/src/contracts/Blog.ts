@@ -12,12 +12,16 @@ export type Post = {
 
 export class BlogContract {
   private contract: ethers.Contract;
+  public readonly address: string;
+
   constructor(contractAddress: string) {
     this.contract = new ethers.Contract(
       contractAddress,
       abi as InterfaceAbi,
       getWeb3Provider()
     );
+
+    this.address = contractAddress;
   }
 
   async getPostCount(): Promise<number> {

@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+pre {
+  @apply !bg-transparent;
+  @apply !p-0;
+  @apply shadow-lg;
+}
+
+.prose {
+  @apply w-full;
+  @apply min-w-full;
+}

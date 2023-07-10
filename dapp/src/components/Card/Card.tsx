@@ -1,13 +1,20 @@
+import classNames from "classnames";
 import React from "react";
 
 type Props = {
   children: React.ReactNode;
+  className?: string;
 };
 
-export const Card: React.FC<Props> = ({ children }) => {
+export const Card: React.FC<Props> = ({ children, className }) => {
   return (
     <>
-      <div className="border rounded bg-base-200 text-base-200-content p-4 shadow">
+      <div
+        className={classNames(
+          "border rounded bg-base-200 text-base-200-content p-4 shadow",
+          className
+        )}
+      >
         {children}
       </div>
     </>
