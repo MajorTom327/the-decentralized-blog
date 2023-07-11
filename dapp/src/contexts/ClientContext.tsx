@@ -1,36 +1,22 @@
 import {
   createContext,
   ReactNode,
-  useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
 } from "react";
 
-import { EthereumProvider } from "@walletconnect/ethereum-provider";
-import Client from "@walletconnect/sign-client";
-
 import * as providers from "ethers/providers";
 import { environment } from "../lib/constants";
-import { chains } from "../main";
-import { head, isNotNil } from "ramda";
+import { isNotNil } from "ramda";
 
-/**
- * Types
- */
 interface IContext {
   web3Provider?: providers.Provider;
 }
 
-/**
- * Context
- */
 export const ClientContext = createContext<IContext>({} as IContext);
 
-/**
- * Provider
- */
 export function ClientContextProvider({
   children,
 }: {

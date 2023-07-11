@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import Blog from "../contracts/Blog";
 import { environment } from "../lib/constants";
 import { useWalletConnectClient } from "./ClientContext";
