@@ -3,9 +3,9 @@ NAME=Blog
 
 all: $(NAME)
 
-$(NAME): website production
+$(NAME): production website
 
-ENVIRONMENT := development
+ENVIRONMENT := production
 
 ifeq ($(ENVIRONMENT),production)
     CHAIN_ID := 1
@@ -21,17 +21,17 @@ build:
 
 production:
 	$(eval ENVIRONMENT := production)
-	$(eval CHAIN_ID := 1)
-	$(eval NETWORK := mainnet)
+	$(eval CHAIN_ID := 137)
+	$(eval NETWORK := polygon)
 	@echo "Publishing to production..."
-	@cd blog && forge script script/Blog.s.sol:BlogScript --rpc-url "polygon" --broadcast --ledger --verify -vvvv
+	@cd blog && dotenv -- forge script script/Blog.s.sol:BlogScript --rpc-url "polygon" --legacy --broadcast --ledger --verify -vvvv
 
 dev:
 	$(eval ENVIRONMENT := development)
 	$(eval CHAIN_ID := 11155111)
 	$(eval NETWORK := sepolia)
 	@echo "Publishing to development..."
-	@cd blog && forge script script/Blog.s.sol:BlogScript --rpc-url "sepolia" --broadcast --ledger --verify -vvvv
+	@cd blog && dotenv -- forge script script/Blog.s.sol:BlogScript --rpc-url "sepolia" --broadcast --ledger --verify -vvvv
 
 anvil:
 	@echo "Publishing to anvil..."
@@ -39,6 +39,9 @@ anvil:
 	@forge script script/Blog.s.sol:BlogScript --rpc-url "anvil" --broadcast -vvvv
 
 website: build
+	$(eval ENVIRONMENT := production)
+	$(eval CHAIN_ID := 137)
+	$(eval NETWORK := polygon)
 	@echo "Copying abi..."
 	@cat blog/out/**/Blog.json | jq -r tostring > dapp/src/contracts/abi/Blog.json
 	@echo "Building website..."
@@ -50,4 +53,5 @@ website: build
 	@echo "VITE_CONTRACTS_BLOG=$(CONTRACT_ID)" >> .env
 	@echo "VITE_WC_PROJECT_ID=6432cc355400456b40d8913067fb5630" >> .env
 	@echo "VITE_ALCHEMY_API_KEY=gHxGnN_qhOsDSLBnNRSO_kr1C8cAKzRM" >> .env
-	@cd dapp && dotenv -e ./.env yarn build
+	@cp ./.env ./dapp/.env
+	@cd dapp && dotenv -- yarn build

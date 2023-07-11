@@ -9,7 +9,7 @@ import {
 
 import * as providers from "ethers/providers";
 import { environment } from "../lib/constants";
-import { isNotNil } from "ramda";
+import { has, isNotNil } from "ramda";
 
 interface IContext {
   web3Provider?: providers.Provider;
@@ -27,19 +27,47 @@ export function ClientContextProvider({
   >();
 
   useEffect(() => {
-    const { ethereum } = window as { ethereum?: providers.Eip1193Provider };
+    const connect = async () => {
+      const { ethereum } = window as { ethereum?: providers.Eip1193Provider };
 
-    if (isNotNil(ethereum)) {
-      const provider = new providers.BrowserProvider(ethereum);
-      setWeb3Provider(provider);
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const provider = providers.getDefaultProvider(
-        environment.NETWORK as providers.Networkish
-      );
+      try {
+        if (isNotNil(ethereum)) {
+          await ethereum.request({
+            method: "wallet_addEthereumChain",
+            params: [
+              {
+                chainId: "0x89",
+                rpcUrls: ["https://rpc-mainnet.matic.network/"],
+                chainName: "Matic Mainnet",
+                nativeCurrency: {
+                  name: "MATIC",
+                  symbol: "MATIC",
+                  decimals: 18,
+                },
+                blockExplorerUrls: ["https://polygonscan.com/"],
+              },
+            ],
+          });
+        }
+        console.log("You have switched to the right network");
+      } catch (switchError: any) {
+        // The network has not been added to MetaMask
+        if (has("code", switchError) && switchError.code === 4902) {
+          console.log("Please add the Polygon network to MetaMask");
+        }
+        console.log("Cannot switch to the network");
+      }
+
+      const provider = isNotNil(ethereum)
+        ? new providers.BrowserProvider(ethereum)
+        : providers.getDefaultProvider(
+            environment.NETWORK as providers.Networkish
+          );
 
       setWeb3Provider(provider);
-    }
+    };
+
+    void connect();
   }, []);
 
   const value = useMemo(

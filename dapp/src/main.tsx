@@ -21,7 +21,6 @@ import { BlogProvider } from "./contexts/BlogProvider.tsx";
 
 const App = React.lazy(() => import("./App.tsx"));
 
-// const chains = [polygon, sepolia, localhost];
 export const chains = reject(isNilOrEmpty)([
   // localhost,
   import.meta.env.PROD ? polygon : sepolia,

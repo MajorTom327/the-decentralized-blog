@@ -26,6 +26,8 @@ export class BlogContract {
       provider
     );
 
+    console.log("BlogContract", this.contract.owner());
+
     this.address = contractAddress;
   }
 

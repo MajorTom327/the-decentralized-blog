@@ -63,6 +63,7 @@ export const Footer: React.FC = () => {
     if (!blog) return;
 
     void blog.getOwner().then((owner) => {
+      console.log({ owner });
       setOwner(owner);
     });
   }, [blog]);

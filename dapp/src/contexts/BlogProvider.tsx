@@ -22,6 +22,7 @@ export const BlogProvider: React.FC<ProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (web3Provider) {
+      console.log({ web3Provider });
       const localBlog = new Blog(environment.CONTRACTS.BLOG, web3Provider);
       setBlog(localBlog);
     }
