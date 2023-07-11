@@ -14,7 +14,7 @@ export const useBlogPosts = () => {
       setPostCount(count || 0);
     };
     void getPostCount();
-  }, []);
+  }, [blog]);
 
   useEffect(() => {
     const getPosts = async () => {
@@ -22,7 +22,7 @@ export const useBlogPosts = () => {
       setPosts(posts || []);
     };
     void getPosts();
-  }, []);
+  }, [blog]);
 
   return {
     count: postCount,

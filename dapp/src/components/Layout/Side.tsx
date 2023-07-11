@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Card from "../Card";
-import useBlogPosts from "../../hooks/useBlog";
+import useBlogPosts from "../../hooks/useBlogPosts";
 import { Post } from "../../contracts/Blog";
 import classNames from "classnames";
 import { DateTime } from "luxon";

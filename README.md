@@ -15,10 +15,3 @@ The web app is a basic vite application with react and ts
 Use ethers to connect with the chain and request the smart contract information for the blog.
 
 You can find the web app in the [dapp](./dapp) folder.
-
-
-Article 1
-ipfs://bafybeibc4tssmdzfeu7y32dfomnwemtonqncrse4xet5d2asmjkrcln4x4/
-
-Landing
-ipfs://bafybeid7p2v52kdb4xbwghc75jqgazmt5mb45pvqsbpyhiz3brg7vwtwpq/
