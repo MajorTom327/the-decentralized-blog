@@ -2,6 +2,8 @@
 
 This project is a decentralized blog that leverages IPFS as content storage and Ethereum as the blockchain for storing the list of articles.
 
+To view the blog, visit: [https://blog.majortom327.eth/](https://blog.majortom327.eth/) with a web3 enabled browser such as [Brave](https://brave.com/).
+
 ## The Smart Contract
 
 The smart contract at the core of this project is designed to be simple yet effective. It serves as a repository for a list of articles, with each article consisting of a title, an IPFS CID (Content Identifier), and a timestamp indicating when it was added.
