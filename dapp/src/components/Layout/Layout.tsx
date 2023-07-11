@@ -12,9 +12,9 @@ export const Layout: React.FC<Props> = ({ children }) => {
     <>
       <div className="container mx-auto flex flex-col gap-2 py-2 h-full min-h-screen">
         <Navbar />
-        <div className="flex-1 flex gap-2">
-          <div className="w-3/4">{children}</div>
-          <div className="w-1/4">
+        <div className="flex-1 flex flex-col lg:flex-row gap-2 px-2 lg:p-0">
+          <div className="lg:w-3/4">{children}</div>
+          <div className="lg:w-1/4">
             <Side />
           </div>
         </div>

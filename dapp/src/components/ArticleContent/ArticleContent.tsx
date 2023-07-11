@@ -52,9 +52,13 @@ export const ArticleContent: React.FC = () => {
 
         <div className="flex flex-col items-center justify-center mt-4 border-t pt-2 text-neutral/80">
           <div>Retrieve the article on IPFS:</div>
-          <div className="font-semibold">
+          <a
+            className="font-semibold hover:underline"
+            target="_blank"
+            href={`ipfs://${ctx.selectedArticle?.ipfsUrl || ""}`}
+          >
             ipfs://{ctx.selectedArticle?.ipfsUrl}
-          </div>
+          </a>
         </div>
       </Card>
     </>

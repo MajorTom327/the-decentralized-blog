@@ -1,19 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useAccount, useContractWrite, usePrepareContractWrite } from "wagmi";
-import { blog } from "../../contracts";
 import Button from "../Button/Button";
 import { DateTime } from "luxon";
-import { uniq } from "ramda";
+import { isNotNil, uniq } from "ramda";
+import { useBlog } from "../../contexts/BlogProvider";
+import { environment } from "../../lib/constants";
 
 export const AsOwner: React.FC = () => {
   const [title, setTitle] = useState("");
   const [ipfs, setIpfs] = useState("");
+  const blog = useBlog();
 
   const { config } = usePrepareContractWrite({
-    // @ts-expect-error That a valid one.
-    address: blog.address,
     // @ts-expect-error I don't care at this point.
-    abi: blog.abi,
+    address: environment.CONTRACTS.BLOG,
+    // @ts-expect-error I don't care at this point.
+    abi: blog?.abi,
     functionName: "createPost",
     args: [title, ipfs],
   });
@@ -55,14 +57,22 @@ export const AsOwner: React.FC = () => {
 export const Footer: React.FC = () => {
   const { address } = useAccount();
   const [owner, setOwner] = useState<string | null>(null);
+  const blog = useBlog();
 
   useEffect(() => {
+    console.log("getting owner before");
+    if (!blog) return;
+
+    console.log("getting owner");
     void blog.getOwner().then((owner) => {
+      console.log("got this owner", { owner });
       setOwner(owner);
     });
-  }, []);
+  }, [blog]);
 
-  if (address === owner) {
+  console.log({ address, owner });
+
+  if (isNotNil(address) && address === owner) {
     return <AsOwner />;
   }
 
@@ -71,8 +81,8 @@ export const Footer: React.FC = () => {
   return (
     <>
       <footer>
-        <div className="flex flex-col gap-2 items-center w-full justify-center p-2 bg-primary text-primary-content rounded">
-          <h1 className="text-xl">
+        <div className="flex flex-col gap-2 items-center w-full justify-center p-2 bg-primary text-primary-content rounded text-center">
+          <h1 className="text-xl ">
             A decentralized blog built by majortom327.eth
           </h1>
           <h2>{footerDate} © </h2>

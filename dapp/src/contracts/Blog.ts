@@ -1,8 +1,8 @@
 import { ethers } from "ethers";
+import { Provider } from "ethers/providers";
 
 import { abi } from "./abi/Blog.json";
 import { InterfaceAbi } from "ethers";
-import { getWeb3Provider } from "../lib/getWeb3Provider";
 import { isNotNilOrEmpty } from "ramda-adjunct";
 
 export type Post = {
@@ -17,12 +17,13 @@ export class BlogContract {
   public readonly abi: InterfaceAbi = abi as InterfaceAbi;
   protected owner: string | null = null;
 
-  constructor(contractAddress: string) {
+  constructor(contractAddress: string, provider: Provider) {
     this.abi = abi as InterfaceAbi;
+
     this.contract = new ethers.Contract(
       contractAddress,
       abi as InterfaceAbi,
-      getWeb3Provider()
+      provider
     );
 
     this.address = contractAddress;
@@ -33,10 +34,17 @@ export class BlogContract {
       return Promise.resolve(this.owner!);
     }
 
-    return this.contract.owner().then((result: string) => {
-      this.owner = result;
-      return result;
-    });
+    return this.contract
+      .owner()
+      .then((result: string) => {
+        console.log("getOwner", result);
+        this.owner = result;
+        return result;
+      })
+      .catch((error) => {
+        console.log("getOwner error", error);
+        return "";
+      });
   }
 
   async createPost(title: string, ipfsUrl: string): Promise<void> {
@@ -47,7 +55,6 @@ export class BlogContract {
 
   async getPostCount(): Promise<number> {
     return this.contract.getPostsCount().then((result: number) => {
-      console.log("getPostCount", result);
       return ethers.toNumber(result);
       // return result;
     });

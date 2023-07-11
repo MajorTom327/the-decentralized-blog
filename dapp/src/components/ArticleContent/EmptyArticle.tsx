@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../Card/Card";
-import { FaArrowRight } from "react-icons/fa";
+import { FaArrowDown, FaArrowRight } from "react-icons/fa";
 
 export const EmptyArticle: React.FC = () => {
   return (
@@ -20,9 +20,12 @@ export const EmptyArticle: React.FC = () => {
           published (on IPFS oc!) on the right panel.
         </p>
 
-        <div className="flex justify-end text-2xl">
-          <div className="animate-pulse">
+        <div className="flex justify-center lg:justify-end text-2xl">
+          <div className="hidden lg:block animate-pulse">
             <FaArrowRight />
+          </div>
+          <div className="lg:hidden animate-pulse">
+            <FaArrowDown />
           </div>
         </div>
       </Card>

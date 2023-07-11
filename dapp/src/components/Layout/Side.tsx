@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import Card from "../Card";
-import useBlog from "../../hooks/useBlog";
+import useBlogPosts from "../../hooks/useBlog";
 import { Post } from "../../contracts/Blog";
 import classNames from "classnames";
 import { DateTime } from "luxon";
@@ -60,7 +60,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ children, disabled, post }) => {
 
 export const Side: React.FC = () => {
   const [search, setSearch] = React.useState<string>("");
-  const { count, posts } = useBlog();
+  const { count, posts } = useBlogPosts();
 
   const cleanArticles = posts.filter((article: Post) => {
     return article.title.toLowerCase().includes(search.toLowerCase());

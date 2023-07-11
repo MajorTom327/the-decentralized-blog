@@ -9,11 +9,11 @@ import {
   useSendTransaction,
 } from "wagmi";
 import { parseEther } from "ethers";
-import { blog } from "../../contracts";
+
 import { always, gte, isNil, lte, when } from "ramda";
+import { environment } from "../../lib/constants";
 
 const MINIMAL_DONATION = 0.000001;
-const STEP_DONATION = 0.00001;
 
 export const Donate: React.FC = () => {
   const [isSending, setIsSending] = useState(false);
@@ -22,7 +22,7 @@ export const Donate: React.FC = () => {
   const [amount, setAmount] = useState(0.000001);
 
   const { config } = usePrepareSendTransaction({
-    to: blog.address,
+    to: environment.CONTRACTS.BLOG,
     value: parseEther(
       when(gte(MINIMAL_DONATION), always(MINIMAL_DONATION))(amount).toFixed(18)
     ),

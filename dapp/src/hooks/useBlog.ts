@@ -1,24 +1,25 @@
 import { useEffect, useState } from "react";
-import { blog } from "../contracts";
 import { Post } from "../contracts/Blog";
+import { useBlog } from "../contexts/BlogProvider";
 
-export const useBlog = () => {
+export const useBlogPosts = () => {
   const [postCount, setPostCount] = useState<number>(0);
   const [posts, setPosts] = useState<Post[]>([]);
 
+  const blog = useBlog();
+
   useEffect(() => {
     const getPostCount = async () => {
-      const count = await blog.getPostCount();
-      console.log("getPostCount", { count });
-      setPostCount(count);
+      const count = await blog?.getPostCount();
+      setPostCount(count || 0);
     };
     void getPostCount();
   }, []);
 
   useEffect(() => {
     const getPosts = async () => {
-      const posts = await blog.getPosts();
-      setPosts(posts);
+      const posts = await blog?.getPosts();
+      setPosts(posts || []);
     };
     void getPosts();
   }, []);
@@ -29,4 +30,4 @@ export const useBlog = () => {
   };
 };
 
-export default useBlog;
+export default useBlogPosts;
