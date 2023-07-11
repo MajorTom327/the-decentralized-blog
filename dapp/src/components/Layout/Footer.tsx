@@ -60,17 +60,12 @@ export const Footer: React.FC = () => {
   const blog = useBlog();
 
   useEffect(() => {
-    console.log("getting owner before");
     if (!blog) return;
 
-    console.log("getting owner");
     void blog.getOwner().then((owner) => {
-      console.log("got this owner", { owner });
       setOwner(owner);
     });
   }, [blog]);
-
-  console.log({ address, owner });
 
   if (isNotNil(address) && address === owner) {
     return <AsOwner />;

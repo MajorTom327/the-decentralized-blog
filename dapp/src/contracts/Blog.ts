@@ -37,7 +37,6 @@ export class BlogContract {
     return this.contract
       .owner()
       .then((result: string) => {
-        console.log("getOwner", result);
         this.owner = result;
         return result;
       })
