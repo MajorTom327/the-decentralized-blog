@@ -7,15 +7,27 @@ import { DateTime } from "luxon";
 import { ArticleContext } from "../../contexts/ArticleProvider";
 import { isNotNil } from "ramda";
 import Donate from "./Donate";
+import { match } from "ts-pattern";
 
 type MenuItemProps = {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   disabled?: boolean;
   post?: Post;
 };
 
+const maxTitleLength = 20;
+
 const MenuItem: React.FC<MenuItemProps> = ({ children, disabled, post }) => {
   const articleCtx = useContext(ArticleContext);
+
+  const shortTitle = match(post?.title)
+    .with(undefined, () => children)
+    .when(
+      (title) => title.length > maxTitleLength,
+      (title) => `${title.slice(0, maxTitleLength)}…`
+    )
+    .otherwise((title) => title);
+
   return (
     <li>
       <button
@@ -23,8 +35,6 @@ const MenuItem: React.FC<MenuItemProps> = ({ children, disabled, post }) => {
           if (!disabled && isNotNil(post)) {
             articleCtx.setSelectedArticle({
               ...post,
-              // ipfsUrl: "QmWvLWsr7eotz26hNfG2hgiFPNs2bxMZQjek7kw65cLpqR",
-              ipfsUrl: "QmQgs1NfzBim1VGskhLKeRJG2Kjj1BR7yF6LhRhAbVbfpr",
             });
           }
         }}
@@ -33,8 +43,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ children, disabled, post }) => {
             !disabled,
           "text-neutral/30 cursor-default text-center": disabled,
         })}
+        title={post?.title}
       >
-        {children}
+        {shortTitle}
         {post?.timestamp && (
           <span className="float-right text-neutral/50 group-hover:text-primary-content/75">
             {DateTime.fromSeconds(post.timestamp).toLocaleString(
@@ -74,9 +85,7 @@ export const Side: React.FC = () => {
             />
             <ul>
               {cleanArticles.map((article: Post) => (
-                <MenuItem key={article.ipfsUrl} post={article}>
-                  {article.title}
-                </MenuItem>
+                <MenuItem key={article.ipfsUrl} post={article} />
               ))}
 
               {cleanArticles.length === 0 && (
