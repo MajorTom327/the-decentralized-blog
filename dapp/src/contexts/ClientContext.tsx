@@ -14,6 +14,7 @@ import Client from "@walletconnect/sign-client";
 import * as providers from "ethers/providers";
 import { environment } from "../lib/constants";
 import { chains } from "../main";
+import { head, isNotNil } from "ramda";
 
 /**
  * Types
@@ -35,62 +36,32 @@ export function ClientContextProvider({
 }: {
   children: ReactNode | ReactNode[];
 }) {
-  const [web3Provider, setWeb3Provider] = useState<providers.Provider>();
-  const [client, setClient] = useState<Client>();
-  const [ethereumProvider, setEthereumProvider] =
-    useState<Awaited<ReturnType<typeof EthereumProvider.init>>>();
+  const [web3Provider, setWeb3Provider] = useState<
+    providers.Provider | providers.AbstractProvider
+  >();
 
-  const createClient = useCallback(async () => {
-    // @ts-expect-error ignore this
-    const provider = await EthereumProvider.init({
-      projectId: environment.WC_PROJECT_ID,
-      chains: chains.map((chain): number => chain.id),
-      optionalChains: chains.map((chain): number => chain.id),
-      showQrModal: false,
-    });
+  useEffect(() => {
+    const { ethereum } = window as { ethereum?: providers.Eip1193Provider };
 
-    setEthereumProvider(provider);
-  }, []);
-
-  const createWeb3Provider = useCallback(
-    (ethereumProvider: UniversalProvider) => {
-      const web3Provider = new providers.BrowserProvider(
-        ethereumProvider,
-        environment.NETWORK
+    if (isNotNil(ethereum)) {
+      const provider = new providers.BrowserProvider(ethereum);
+      setWeb3Provider(provider);
+    } else {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      const provider = providers.getDefaultProvider(
+        environment.NETWORK as providers.Networkish
       );
-      setWeb3Provider(web3Provider);
-    },
-    []
-  );
 
-  const connect = useCallback(async () => {
-    if (!ethereumProvider) {
-      throw new ReferenceError("WalletConnect Client is not initialized.");
+      setWeb3Provider(provider);
     }
-
-    const _accounts = await ethereumProvider.enable();
-
-    console.log("accounts", { _accounts });
-  }, [ethereumProvider, createWeb3Provider]);
-
-  useEffect(() => {
-    if (!client) {
-      void createClient();
-    }
-  }, [client, createClient]);
-
-  useEffect(() => {
-    if (!web3Provider) {
-      void connect();
-    }
-  }, [client, connect, web3Provider]);
+  }, []);
 
   const value = useMemo(
     () => ({
-      connect,
-      web3Provider: ethereumProvider,
+      // connect,
+      web3Provider,
     }),
-    [connect, web3Provider]
+    [web3Provider]
   );
 
   if (!value.web3Provider) {
