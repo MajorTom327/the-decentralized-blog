@@ -1,14 +1,19 @@
-import React, { useContext } from "react";
+import React, { Suspense, useContext } from "react";
 import { ArticleContext } from "../../contexts/ArticleProvider";
 import { prop } from "ramda";
 import { isNilOrEmpty } from "ramda-adjunct";
-import { ReactMarkdown } from "react-markdown/lib/react-markdown";
 import Card from "../Card/Card";
 import EmptyArticle from "./EmptyArticle";
 import { DateTime } from "luxon";
 
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { solarizedlight } from "react-syntax-highlighter/dist/esm/styles/prism";
+
+const ReactMarkdown = React.lazy(() =>
+  import("react-markdown/lib/react-markdown").then((module) => ({
+    default: module.ReactMarkdown,
+  }))
+);
 
 export const ArticleContent: React.FC = () => {
   const ctx = useContext(ArticleContext);
@@ -25,29 +30,31 @@ export const ArticleContent: React.FC = () => {
           )}
         </div>
         <div className="flex w-full">
-          <ReactMarkdown
-            className="prose w-full"
-            children={prop<string>("content", ctx)}
-            components={{
-              code({ inline, className, children, ...props }) {
-                const match = /language-(\w+)/.exec(className || "");
-                return !inline && match ? (
-                  <SyntaxHighlighter
-                    {...props}
-                    children={String(children).replace(/\n$/, "")}
-                    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-                    style={solarizedlight}
-                    language={match[1]}
-                    PreTag="div"
-                  />
-                ) : (
-                  <code {...props} className={className}>
-                    {children}
-                  </code>
-                );
-              },
-            }}
-          />
+          <Suspense fallback={<div>Loading...</div>}>
+            <ReactMarkdown
+              className="prose w-full"
+              children={prop<string>("content", ctx)}
+              components={{
+                code({ inline, className, children, ...props }) {
+                  const match = /language-(\w+)/.exec(className || "");
+                  return !inline && match ? (
+                    <SyntaxHighlighter
+                      {...props}
+                      children={String(children).replace(/\n$/, "")}
+                      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+                      style={solarizedlight}
+                      language={match[1]}
+                      PreTag="div"
+                    />
+                  ) : (
+                    <code {...props} className={className}>
+                      {children}
+                    </code>
+                  );
+                },
+              }}
+            />
+          </Suspense>
         </div>
 
         <div className="flex flex-col items-center justify-center mt-4 border-t pt-2 text-neutral/80">

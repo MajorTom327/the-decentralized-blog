@@ -40,14 +40,14 @@ anvil:
 
 website: build
 	@echo "Copying abi..."
-	@cp blog/out/**/Blog.json dapp/src/contracts/abi/
+	@cat blog/out/**/Blog.json | jq -r tostring > dapp/src/contracts/abi/Blog.json
 	@echo "Building website..."
 
-	@eval CONTRACT_ID=$$(cat ./blog/broadcast/Blog.s.sol/$(CHAIN_ID)/run-latest.json | jq '.transactions[0].contractAddress') ; echo "$$CONTRACT_ID"
+	$(eval CONTRACT_ID := $(shell cat ./blog/broadcast/Blog.s.sol/$(CHAIN_ID)/run-latest.json | jq -r '.transactions[0].contractAddress'))
+
 	@echo "VITE_NETWORK=$(NETWORK)" > .env
 	@echo "VITE_CHAIN_ID=$(CHAIN_ID)" >> .env
 	@echo "VITE_CONTRACTS_BLOG=$(CONTRACT_ID)" >> .env
 	@echo "VITE_WC_PROJECT_ID=6432cc355400456b40d8913067fb5630" >> .env
 	@echo "VITE_ALCHEMY_API_KEY=gHxGnN_qhOsDSLBnNRSO_kr1C8cAKzRM" >> .env
-
 	@cd dapp && dotenv -e ./.env yarn build

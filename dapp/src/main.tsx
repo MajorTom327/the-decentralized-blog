@@ -1,7 +1,6 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import React, { Suspense } from "react";
+import ReactDOM from "react-dom/client";
+import "./index.css";
 import IpfsProvider from "./contexts/IpfsProvider.tsx";
 import ArticleProvider from "./contexts/ArticleProvider.tsx";
 
@@ -19,6 +18,8 @@ import { reject } from "ramda";
 import { publicProvider } from "wagmi/providers/public";
 import { ClientContextProvider } from "./contexts/ClientContext.tsx";
 import { BlogProvider } from "./contexts/BlogProvider.tsx";
+
+const App = React.lazy(() => import("./App.tsx"));
 
 // const chains = [polygon, sepolia, localhost];
 export const chains = reject(isNilOrEmpty)([
@@ -51,7 +52,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <BlogProvider>
           <IpfsProvider>
             <ArticleProvider>
-              <App />
+              <Suspense fallback={<div>Loading...</div>}>
+                <App />
+              </Suspense>
               <Web3Modal
                 projectId={projectId}
                 ethereumClient={ethereumClient}
